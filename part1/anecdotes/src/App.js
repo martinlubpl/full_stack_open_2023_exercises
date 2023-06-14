@@ -32,12 +32,24 @@ const App = () => {
     console.log(points)
   }
 
+  const getTop = () => {
+    console.log("a")
+    if (Object.keys(points).length === 0 && points.constructor === Object) {
+      return "no votes"
+    }
+    const topIndex = Object.keys(points).reduce((a, b) => points[a] > points[b] ? a : b)
+    return <><div>{anecdotes[topIndex]}</div><div>has {points[topIndex]} votes</div></>
+  }
+
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <div>{anecdotes[selected]}</div>
       <div>has {points[selected] || 0} votes</div>
       <button onClick={addVote}>vote</button>
       <button onClick={selectAnecdote}>next anecdote</button>
+      <h1>Top anecdote</h1>
+      <div>{getTop()}</div>
     </div>
   )
 }
