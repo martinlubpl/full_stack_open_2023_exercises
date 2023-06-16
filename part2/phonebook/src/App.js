@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import { PersonForm } from './components/PersonForm'
 import Persons from './components/Persons'
-import axios from 'axios'
+import personService from './components/services/persons'
 
 
 const App = () => {
@@ -25,28 +25,26 @@ const App = () => {
     } else {
       //db
       const newPerson = { name: newName, number: newPhone }
-      axios
-        .post(dbUrl, newPerson)
+      personService
+        .create(newPerson)
         .then(response => {
           //state
-          const newPersons = persons.concat(response.data)
+          const newPersons = persons.concat(response)
           setPersons(newPersons)
           setNewName('')
           setNewPhone('')
         })
-      //state
-      // const newPersons = persons.concat({ name: newName, number: newPhone })
-      // setPersons(newPersons)
-      // setNewName('')
-      // setNewPhone('')
     }
     //
 
-  }
+  } // END ADD PERSON
+
+  // initial laod
   useEffect(() => {
-    console.log('useeffect')
-    axios.get(dbUrl)
-      .then(response => setPersons(response.data))
+    //components/services/persons.js imported as personService
+    personService
+      .getAll()
+      .then(initialPersons => setPersons(initialPersons))
   }, [])
 
   return (
