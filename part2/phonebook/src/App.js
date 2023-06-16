@@ -19,9 +19,25 @@ const App = () => {
     // console.log(event.target)
     //check if exists
     const personExists = persons.some(person => person.name === newName)
-    const phoneExists = persons.some(person => person.number === newPhone)
-    if (personExists || phoneExists) {
-      alert(`${newName} or ${newPhone} is already added to the phonebook`)
+    //const phoneExists = persons.some(person => person.number === newPhone)
+
+    if (personExists) {
+      // alert(`${newName} or ${newPhone} is already added to the phonebook`)
+      if (window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one`)) {
+        console.log('update')
+        const person = persons.find(person => person.name === newName)
+        // console.log(ind)
+        // console.log(persons[ind].id)
+        const changedPerson = { ...person, number: newPhone }
+        const id = changedPerson.id
+        personService
+          .update(id, changedPerson)
+          .then(resp => {
+            setPersons(persons.map(p => p.id !== id ? p : resp))
+            setNewName('')
+            setNewPhone('')
+          })
+      }
     } else {
       //db
       const newPerson = { name: newName, number: newPhone }
@@ -47,6 +63,20 @@ const App = () => {
       .then(initialPersons => setPersons(initialPersons))
   }, [])
 
+  //DELETE
+  const handleDelete = (name, id) => {
+    console.log(name, id)
+    if (window.confirm(`Delete ${name} ?`)) {
+      personService.delPerson(id).then(response => {
+        //state
+        const newPersons = persons.filter((person) => person.id != id)
+        setPersons(newPersons)
+      })
+    }
+
+
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -62,8 +92,9 @@ const App = () => {
       <h2>Numbers</h2>
       {/* {persons.filter(person => person.name.toLowerCase().includes(searchFilter.toLowerCase())).map(person => <p key={person.name}>{person.name} {person.phone}</p>)} */}
       {/* only filtered */}
-      <Persons persons={persons.filter(person => person.name.toLowerCase()
-        .includes(searchFilter.toLowerCase()))} />
+      <Persons
+        persons={persons.filter(person => person.name.toLowerCase()
+          .includes(searchFilter.toLowerCase()))} handleDelete={handleDelete} />
     </div>
   )
 }
