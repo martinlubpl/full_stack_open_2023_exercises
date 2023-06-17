@@ -4,6 +4,7 @@ import { PersonForm } from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './components/services/persons'
 import Notification from './components/Notification'
+import ErrorMessage from './components/ErrorMessage'
 
 
 const App = () => {
@@ -13,6 +14,7 @@ const App = () => {
   const [newPhone, setNewPhone] = useState('')
   const [searchFilter, setSearchFilter] = useState('')
   const [message, setMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
   // const dbUrl = 'http://localhost:3001/persons'
 
   // ADD PERSON ///////////////////////////////////////////////
@@ -83,6 +85,17 @@ const App = () => {
         const newPersons = persons.filter((person) => person.id !== id)
         setPersons(newPersons)
       })
+      .catch(error => {
+        // console.log('displat errorMessage')
+        setErrorMessage(`${name} was already deleted from the phonebook`)
+      
+        setTimeout(() => {
+                  setErrorMessage(null)
+                  //state
+                  const newPersons = persons.filter((person) => person.id !== id)
+                  setPersons(newPersons)
+                }, 3000)
+      })
     }
 
 
@@ -92,6 +105,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification message={message} />
+      <ErrorMessage message={errorMessage} />
       <Filter
         searchFilter={searchFilter}
         setSearchFilter={setSearchFilter} />
