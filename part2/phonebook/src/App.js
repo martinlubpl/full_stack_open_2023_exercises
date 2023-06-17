@@ -3,6 +3,7 @@ import Filter from './components/Filter'
 import { PersonForm } from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './components/services/persons'
+import Notification from './components/Notification'
 
 
 const App = () => {
@@ -11,9 +12,10 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [searchFilter, setSearchFilter] = useState('')
-  const dbUrl = 'http://localhost:3001/persons'
+  const [message, setMessage] = useState(null)
+  // const dbUrl = 'http://localhost:3001/persons'
 
-  /////////////////////////////////////////////////
+  // ADD PERSON ///////////////////////////////////////////////
   const handleAddPerson = (event) => {
     event.preventDefault()
     // console.log(event.target)
@@ -21,6 +23,8 @@ const App = () => {
     const personExists = persons.some(person => person.name === newName)
     //const phoneExists = persons.some(person => person.number === newPhone)
 
+
+    //UPDATE
     if (personExists) {
       // alert(`${newName} or ${newPhone} is already added to the phonebook`)
       if (window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one`)) {
@@ -34,6 +38,7 @@ const App = () => {
           .update(id, changedPerson)
           .then(resp => {
             setPersons(persons.map(p => p.id !== id ? p : resp))
+            setMessage(`${newName} updated`)
             setNewName('')
             setNewPhone('')
           })
@@ -47,6 +52,12 @@ const App = () => {
           //state
           const newPersons = persons.concat(response)
           setPersons(newPersons)
+          // set notification and timeout
+          setMessage(`${newName} added to database`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 3000)
+          //
           setNewName('')
           setNewPhone('')
         })
@@ -55,7 +66,7 @@ const App = () => {
 
   } // END ADD PERSON
 
-  // initial laod
+  // initial laod START
   useEffect(() => {
     //components/services/persons.js imported as personService
     personService
@@ -69,7 +80,7 @@ const App = () => {
     if (window.confirm(`Delete ${name} ?`)) {
       personService.delPerson(id).then(response => {
         //state
-        const newPersons = persons.filter((person) => person.id != id)
+        const newPersons = persons.filter((person) => person.id !== id)
         setPersons(newPersons)
       })
     }
@@ -80,6 +91,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter
         searchFilter={searchFilter}
         setSearchFilter={setSearchFilter} />
