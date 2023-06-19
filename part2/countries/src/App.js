@@ -10,7 +10,7 @@ function App() {
   
   //init load countries https://studies.cs.helsinki.fi/restcountries/api/all
   useEffect(() => {
-    console.log('load init countries')
+    // console.log('load init countries')
     axios
     .get('https://studies.cs.helsinki.fi/restcountries/api/all')
     .then(resp => {
@@ -26,7 +26,7 @@ function App() {
   }
   // show 1 country
   const handleShowCountry = (country) => {
-    console.log(country)
+    // console.log(country)
     setSearch(country)
   }
   
