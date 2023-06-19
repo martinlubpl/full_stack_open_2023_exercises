@@ -24,7 +24,11 @@ function App() {
   const handleSearch = (event) => {
     setSearch(event.target.value)
   }
-  
+  // show 1 country
+  const handleShowCountry = (country) => {
+    console.log(country)
+    setSearch(country)
+  }
   
   
   
@@ -39,7 +43,7 @@ function App() {
       onChange={handleSearch} />
     </form>
     </div>
-      <Results countries={countries} search={search} />
+      <Results countries={countries} search={search} handleShowCountry={handleShowCountry}/>
    </>
   );
 }
