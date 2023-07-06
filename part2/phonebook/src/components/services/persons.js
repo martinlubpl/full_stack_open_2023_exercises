@@ -12,7 +12,6 @@ const create = (newObject) => {
   return request.then((response) => response.data)
 }
 
-// TODO: no update functionality  for now todo
 const update = (id, newObject) => {
   const request = axios.put(`${dbUrl}/${id}`, newObject)
   return request.then((response) => response.data)
